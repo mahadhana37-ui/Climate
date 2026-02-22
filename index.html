@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lively Weather Check</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: white;
+        }
+
+        .weather-container {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            width: 320px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            margin-bottom: 20px;
+        }
+
+        input {
+            padding: 10px;
+            width: 70%;
+            border: none;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        button {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background: #ffcc00;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background: #ffaa00;
+        }
+
+        .weather-info {
+            margin-top: 20px;
+        }
+
+        .temp {
+            font-size: 28px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="weather-container">
+    <h1>🌤️ Weather Check</h1>
+
+    <input type="text" id="cityInput" placeholder="Enter city name">
+    <button onclick="getWeather()">Check</button>
+
+    <div class="weather-info" id="weatherInfo"></div>
+</div>
+
+<script>
+    async function getWeather() {
+        const city = document.getElementById("cityInput").value;
+        const apiKey = "YOUR_API_KEY_HERE";  // Replace with your OpenWeatherMap API key
+        const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${apiKey}`;
+
+        try {
+            const response = await fetch(url);
+            const data = await response.json();
+
+            if (data.cod === 200) {
+                document.getElementById("weatherInfo").innerHTML = `
+                    <h2>${data.name}</h2>
+                    <div class="temp">${data.main.temp}°C</div>
+                    <p>${data.weather[0].description}</p>
+                    <p>Humidity: ${data.main.humidity}%</p>
+                    <p>Wind Speed: ${data.wind.speed} m/s</p>
+                `;
+            } else {
+                document.getElementById("weatherInfo").innerHTML = 
+                    `<p>City not found!</p>`;
+            }
+
+        } catch (error) {
+            document.getElementById("weatherInfo").innerHTML = 
+                `<p>Error fetching weather data</p>`;
+        }
+    }
+</script>
+
+</body>
+</html>
